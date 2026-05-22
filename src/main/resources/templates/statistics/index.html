@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Statistics')}">
+<body>
+<div th:fragment="content">
+    <h2 class="mb-4"><i class="bi bi-bar-chart"></i> Statistics &amp; Reports</h2>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">Most Frequent Diagnosis</div>
+                <div class="card-body">
+                    <div th:if="${mostFrequentDiagnosis != null}">
+                        <h5 th:text="${mostFrequentDiagnosis.code}"></h5>
+                        <p class="mb-0" th:text="${mostFrequentDiagnosis.description}"></p>
+                    </div>
+                    <p th:if="${mostFrequentDiagnosis == null}" class="text-muted mb-0">No data</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">Total Patient-Paid Amount</div>
+                <div class="card-body">
+                    <h4 th:text="${totalPatientPaid + ' BGN'}"></h4>
+                    <p class="text-muted mb-0">Examinations paid by uninsured patients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning">Month with Most Sick Leaves</div>
+                <div class="card-body">
+                    <h5 th:text="${monthWithMostSickLeaves}"></h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Doctors with Most Sick Leaves Issued</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush" th:if="${!#lists.isEmpty(doctorsWithMostSickLeaves)}">
+                        <li class="list-group-item" th:each="doc : ${doctorsWithMostSickLeaves}" th:text="${doc.name}"></li>
+                    </ul>
+                    <p th:if="${#lists.isEmpty(doctorsWithMostSickLeaves)}" class="text-muted mb-0">No data</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Visits per Doctor</div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <tbody>
+                            <tr th:each="entry : ${visitCountPerDoctor}">
+                                <td th:text="${entry.key.name}"></td>
+                                <td class="text-end"><span class="badge bg-primary" th:text="${entry.value}"></span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Patients per GP</div>
+        <div class="card-body p-0">
+            <table class="table table-sm mb-0">
+                <thead class="table-light">
+                    <tr><th>GP Name</th><th class="text-end">Patients</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="entry : ${patientCountPerGp}">
+                        <td th:text="${entry.key.name}"></td>
+                        <td class="text-end"><span class="badge bg-success" th:text="${entry.value}"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <a th:href="@{/statistics/by-diagnosis}" class="btn btn-outline-primary w-100">
+                <i class="bi bi-search"></i> Patients by Diagnosis
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/statistics/by-gp}" class="btn btn-outline-success w-100">
+                <i class="bi bi-person-badge"></i> Patients by GP
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/statistics/by-doctor-period}" class="btn btn-outline-info w-100">
+                <i class="bi bi-calendar-range"></i> Examinations by Doctor/Period
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a th:href="@{/statistics/paid-by-doctor}" class="btn btn-outline-warning w-100">
+                <i class="bi bi-currency-exchange"></i> Patient-Paid by Doctor
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

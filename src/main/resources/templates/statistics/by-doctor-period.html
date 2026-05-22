@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Examinations by Doctor/Period')}">
+<body>
+<div th:fragment="content">
+    <h2><i class="bi bi-calendar-range"></i> Examinations by Doctor and/or Period</h2>
+
+    <div class="card mt-3 mb-4">
+        <div class="card-body">
+            <form method="get" th:action="@{/statistics/by-doctor-period}" class="row g-2">
+                <div class="col-md-4">
+                    <label class="form-label">Doctor (optional)</label>
+                    <select name="doctorId" class="form-select">
+                        <option value="">-- All Doctors --</option>
+                        <option th:each="doc : ${doctors}" th:value="${doc.id}"
+                                th:text="${doc.name}"
+                                th:selected="${selectedDoctor != null and selectedDoctor.id == doc.id}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">From</label>
+                    <input type="date" name="from" class="form-control" th:value="${fromDate}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">To</label>
+                    <input type="date" name="to" class="form-control" th:value="${toDate}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${examinations != null}">
+        <div class="card">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr><th>Date</th><th>Doctor</th><th>Patient</th><th>Diagnosis</th><th>Price</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="exam : ${examinations}">
+                            <td th:text="${exam.date}"></td>
+                            <td th:text="${exam.doctor.name}"></td>
+                            <td th:text="${exam.patient.name}"></td>
+                            <td th:text="${exam.diagnosis.code + ' - ' + exam.diagnosis.description}"></td>
+                            <td th:text="${exam.price + ' BGN'}"></td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(examinations)}">
+                            <td colspan="5" class="text-center text-muted">No results.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <a th:href="@{/statistics}" class="btn btn-secondary mt-3">Back to Statistics</a>
+</div>
+</body>
+</html>

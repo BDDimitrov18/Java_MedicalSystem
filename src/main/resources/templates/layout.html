@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout(content, pageTitle)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle != null ? pageTitle + ' - Medical Records' : 'Medical Records'}">Medical Records</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" th:href="@{/}">
+            <i class="bi bi-heart-pulse-fill"></i> Medical Records
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','DOCTOR')">
+                    <a class="nav-link" th:href="@{/doctors}"><i class="bi bi-person-badge"></i> Doctors</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','DOCTOR')">
+                    <a class="nav-link" th:href="@{/patients}"><i class="bi bi-people"></i> Patients</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','DOCTOR')">
+                    <a class="nav-link" th:href="@{/diagnoses}"><i class="bi bi-clipboard2-pulse"></i> Diagnoses</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/examinations}"><i class="bi bi-journal-medical"></i> Examinations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/sickleaves}"><i class="bi bi-file-medical"></i> Sick Leaves</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN','DOCTOR')">
+                    <a class="nav-link" th:href="@{/statistics}"><i class="bi bi-bar-chart"></i> Statistics</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('PATIENT')">
+                    <a class="nav-link" th:href="@{/patients/my}"><i class="bi bi-person-circle"></i> My Record</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        <i class="bi bi-person"></i>
+                        <span sec:authentication="name"></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <form th:action="@{/logout}" method="post">
+                                <button class="dropdown-item text-danger" type="submit">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+        <span th:text="${errorMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div th:replace="${content}"></div>
+</div>
+
+<footer class="text-center text-muted py-4 mt-5 border-top">
+    <small>CSCB869 Medical Records System &copy; 2026</small>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Examination Form')}">
+<body>
+<div th:fragment="content">
+    <h2 th:text="${examination.id != null ? 'Edit Examination' : 'Add Examination'}">Examination Form</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form th:action="${examination.id != null ? '/examinations/' + examination.id + '/edit' : '/examinations/new'}"
+                  th:object="${examination}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Date *</label>
+                    <input type="date" th:field="*{date}" class="form-control"
+                           th:classappend="${#fields.hasErrors('date')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{date}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Doctor *</label>
+                    <select th:field="*{doctor.id}" class="form-select">
+                        <option value="">-- Select Doctor --</option>
+                        <option th:each="doc : ${doctors}" th:value="${doc.id}" th:text="${doc.name}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Patient *</label>
+                    <select th:field="*{patient.id}" class="form-select">
+                        <option value="">-- Select Patient --</option>
+                        <option th:each="pat : ${patients}" th:value="${pat.id}" th:text="${pat.name + ' (' + pat.egn + ')'}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Diagnosis *</label>
+                    <select th:field="*{diagnosis.id}" class="form-select">
+                        <option value="">-- Select Diagnosis --</option>
+                        <option th:each="diag : ${diagnoses}" th:value="${diag.id}"
+                                th:text="${diag.code + ' - ' + diag.description}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Prescribed Treatment</label>
+                    <textarea th:field="*{prescribedTreatment}" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Price (BGN) *</label>
+                    <input type="number" step="0.01" min="0" th:field="*{price}" class="form-control"
+                           th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{price}"></div>
+                    <div class="form-text">Automatically paid by NHIF if patient is health insured.</div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a th:href="@{/examinations}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

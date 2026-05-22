@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Doctor Form')}">
+<body>
+<div th:fragment="content">
+    <h2 th:text="${doctor.id != null ? 'Edit Doctor' : 'Add Doctor'}">Doctor Form</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form th:action="${doctor.id != null ? '/doctors/' + doctor.id + '/edit' : '/doctors/new'}"
+                  th:object="${doctor}" method="post">
+                <div class="mb-3" th:if="${doctor.id != null}">
+                    <label class="form-label">Identification Number</label>
+                    <input type="text" th:value="*{identificationNumber}" class="form-control" readonly>
+                </div>
+                <div class="mb-3" th:unless="${doctor.id != null}">
+                    <label class="form-label">Identification Number</label>
+                    <input type="text" class="form-control" value="Auto-generated on save" readonly disabled>
+                    <div class="form-text">Assigned automatically based on specialty.</div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Name *</label>
+                    <input type="text" th:field="*{name}" class="form-control"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Specialty *</label>
+                    <input type="text" th:field="*{specialty}" class="form-control"
+                           th:classappend="${#fields.hasErrors('specialty')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{specialty}"></div>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" th:field="*{canBeGp}" class="form-check-input" id="canBeGp">
+                    <label class="form-check-label" for="canBeGp">Can be General Practitioner (GP)</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a th:href="@{/doctors}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

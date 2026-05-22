@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Sick Leave Form')}">
+<body>
+<div th:fragment="content">
+    <h2 th:text="${sickLeave.id != null ? 'Edit Sick Leave' : 'Issue Sick Leave'}">Sick Leave Form</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form th:action="${sickLeave.id != null ? '/sickleaves/' + sickLeave.id + '/edit' : '/sickleaves/new'}"
+                  th:object="${sickLeave}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Examination *</label>
+                    <select th:field="*{examination.id}" class="form-select">
+                        <option value="">-- Select Examination --</option>
+                        <option th:each="exam : ${examinations}" th:value="${exam.id}"
+                                th:text="${exam.date + ' - ' + exam.patient.name + ' (' + exam.diagnosis.code + ')'}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Start Date *</label>
+                    <input type="date" th:field="*{startDate}" class="form-control"
+                           th:classappend="${#fields.hasErrors('startDate')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{startDate}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Number of Days *</label>
+                    <input type="number" min="1" th:field="*{numberOfDays}" class="form-control"
+                           th:classappend="${#fields.hasErrors('numberOfDays')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{numberOfDays}"></div>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a th:href="@{/sickleaves}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

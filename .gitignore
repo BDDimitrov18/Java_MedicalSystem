@@ -1,0 +1,8 @@
+target/
+*.log
+*.xml.bak
+repomix-output.xml
+.claude/
+.idea/
+*.iml
+.DS_Store

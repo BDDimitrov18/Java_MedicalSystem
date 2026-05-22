@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Error')}">
+<body>
+<div th:fragment="content">
+    <div class="alert alert-danger">
+        <h4 class="alert-heading" th:text="${errorTitle ?: 'Error'}">Error</h4>
+        <p th:text="${errorMessage ?: 'An unexpected error occurred.'}"></p>
+        <a th:href="@{/}" class="btn btn-outline-danger mt-2">Go to Dashboard</a>
+    </div>
+</div>
+</body>
+</html>

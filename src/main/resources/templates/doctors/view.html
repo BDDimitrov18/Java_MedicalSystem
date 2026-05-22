@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Doctor Details')}">
+<body>
+<div th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="bi bi-person-badge"></i> <span th:text="${doctor.name}"></span></h2>
+        <a th:href="@{/doctors}" class="btn btn-secondary">Back</a>
+    </div>
+    <div class="card mb-3">
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">ID Number</dt>
+                <dd class="col-sm-9" th:text="${doctor.identificationNumber}"></dd>
+                <dt class="col-sm-3">Specialty</dt>
+                <dd class="col-sm-9" th:text="${doctor.specialty}"></dd>
+                <dt class="col-sm-3">Can be GP</dt>
+                <dd class="col-sm-9">
+                    <span th:if="${doctor.canBeGp}" class="badge bg-success">Yes</span>
+                    <span th:unless="${doctor.canBeGp}" class="badge bg-secondary">No</span>
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="card" sec:authorize="hasRole('ADMIN')">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong><i class="bi bi-person-lock"></i> User Account</strong>
+            <a th:href="@{/doctors/{id}/assign-user(id=${doctor.id})}"
+               class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i>
+                <span th:text="${linkedUser != null ? 'Edit Account' : 'Assign Account'}"></span>
+            </a>
+        </div>
+        <div class="card-body">
+            <dl class="row mb-0" th:if="${linkedUser != null}">
+                <dt class="col-sm-3">Username</dt>
+                <dd class="col-sm-9" th:text="${linkedUser.username}"></dd>
+                <dt class="col-sm-3">Role</dt>
+                <dd class="col-sm-9"><span class="badge bg-primary" th:text="${linkedUser.role}"></span></dd>
+            </dl>
+            <p class="text-muted mb-0" th:unless="${linkedUser != null}">No user account assigned.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(content=~{::content}, pageTitle='Patient Form')}">
+<body>
+<div th:fragment="content">
+    <h2 th:text="${patient.id != null ? 'Edit Patient' : 'Register Patient'}">Patient Form</h2>
+
+    <div class="card mt-3">
+        <div class="card-body">
+            <form th:action="${patient.id != null ? '/patients/' + patient.id + '/edit' : '/patients/new'}"
+                  th:object="${patient}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Full Name *</label>
+                    <input type="text" th:field="*{name}" class="form-control"
+                           th:classappend="${#fields.hasErrors('name')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{name}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">EGN (10 digits) *</label>
+                    <input type="text" th:field="*{egn}" class="form-control" maxlength="10"
+                           th:classappend="${#fields.hasErrors('egn')} ? 'is-invalid'">
+                    <div class="invalid-feedback" th:errors="*{egn}"></div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Personal Doctor (GP) *</label>
+                    <select th:field="*{personalDoctor.id}" class="form-select"
+                            th:classappend="${#fields.hasErrors('personalDoctor')} ? 'is-invalid'">
+                        <option value="">-- Select GP --</option>
+                        <option th:each="gp : ${gps}" th:value="${gp.id}" th:text="${gp.name}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:errors="*{personalDoctor}"></div>
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" th:field="*{healthInsured}" class="form-check-input" id="healthInsured">
+                    <label class="form-check-label" for="healthInsured">Health Insured (last 6 months)</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a th:href="@{/patients}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
