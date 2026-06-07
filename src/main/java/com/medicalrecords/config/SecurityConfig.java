@@ -4,13 +4,17 @@ import com.medicalrecords.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -34,6 +38,24 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Order(1)
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        http
+            .securityMatcher("/api/**")
+            .authenticationProvider(authenticationProvider())
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().authenticated()
+            )
+            .httpBasic(basic -> basic.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+            .exceptionHandling(ex -> ex.accessDeniedHandler(
+                    (req, res, denied) -> res.sendError(HttpStatus.FORBIDDEN.value(), "Forbidden")))
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .csrf(csrf -> csrf.disable());
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authenticationProvider(authenticationProvider())

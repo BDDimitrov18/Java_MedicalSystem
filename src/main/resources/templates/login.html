@@ -29,12 +29,37 @@
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
             </form>
-            <div class="mt-3 text-muted small">
-                <strong>Demo accounts:</strong><br>
-                admin / admin123 (Admin)<br>
-                dr.petrov / doctor123 (Doctor)<br>
-                g.stoev / patient123 (Patient)
+            <div class="mt-4">
+                <p class="text-muted small mb-2"><strong>Demo accounts — click to fill:</strong></p>
+                <div class="d-flex flex-column gap-2">
+                    <button type="button" class="btn btn-outline-danger btn-sm text-start"
+                            onclick="fillLogin('admin','admin123')">
+                        <strong>admin</strong> / admin123 &nbsp;<span class="badge bg-danger">Admin</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm text-start"
+                            onclick="fillLogin('dr.petrov','doctor123')">
+                        <strong>dr.petrov</strong> / doctor123 &nbsp;<span class="badge bg-primary">Doctor</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-primary btn-sm text-start"
+                            onclick="fillLogin('dr.georgieva','doctor123')">
+                        <strong>dr.georgieva</strong> / doctor123 &nbsp;<span class="badge bg-primary">Doctor</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm text-start"
+                            onclick="fillLogin('g.stoev','patient123')">
+                        <strong>g.stoev</strong> / patient123 &nbsp;<span class="badge bg-success">Patient</span>
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm text-start"
+                            onclick="fillLogin('a.kostadinova','patient123')">
+                        <strong>a.kostadinova</strong> / patient123 &nbsp;<span class="badge bg-success">Patient</span>
+                    </button>
+                </div>
             </div>
+            <script>
+                function fillLogin(u, p) {
+                    document.querySelector('input[name=username]').value = u;
+                    document.querySelector('input[name=password]').value = p;
+                }
+            </script>
         </div>
     </div>
 </div>

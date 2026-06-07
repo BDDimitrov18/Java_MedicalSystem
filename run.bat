@@ -1,0 +1,3 @@
+@echo off
+echo Starting Medical Records System...
+mvn spring-boot:run

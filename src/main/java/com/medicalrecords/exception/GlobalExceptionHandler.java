@@ -4,7 +4,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice
+@ControllerAdvice(basePackages = "com.medicalrecords.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
